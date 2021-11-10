@@ -22,18 +22,20 @@
 * 커널 수정을 통한 Real time FIFO 스케줄러
 
 1) sched_fork 함수에 추가
-	if(p->policy == SCHED_NORMAL){
-		p->prio = current->normal_prio - NICE_WIDTH -
-			PRIO_TO_NICE(current->static_prio);
-		p->normal_prio = p->prio;
-		p->rt_priority = p->prio;
-		p->policy = SCHED_FIFO;
-		p->static_prio = NICE_TO_PRIO(0);
-	}
+
+if(p->policy == SCHED_NORMAL){
+	p->prio = current->normal_prio - NICE_WIDTH -
+		PRIO_TO_NICE(current->static_prio);
+	p->normal_prio = p->prio;
+	p->rt_priority = p->prio;
+	p->policy = SCHED_FIFO;
+	p->static_prio = NICE_TO_PRIO(0);
+}
   
 2) _sched_setscheduler 함수에 추가
-	if(attr.sched_policy == SCHED_NORMAL){
-                attr.sched_priority = param->sched_priority -
-                        NICE_WIDTH - attr.sched_nice;
-                attr.sched_policy = SCHED_FIFO;
-  }
+	
+if(attr.sched_policy == SCHED_NORMAL){
+       attr.sched_priority = param->sched_priority -
+                 NICE_WIDTH - attr.sched_nice;
+       attr.sched_policy = SCHED_FIFO;
+}
